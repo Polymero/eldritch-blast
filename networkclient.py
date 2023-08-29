@@ -87,7 +87,7 @@ else:
 	PLAYER = 'O'
 
 print('Y:')
-print(BOARD.format(game.state))
+print(BOARD.format(*game.state))
 
 if HOST:
 
@@ -102,7 +102,7 @@ else:
 while True:
 
 	game = pickle.loads(connection.recv(1024))
-	print(BOARD.format(game.state))
+	print(BOARD.format(*game.state))
 
 	move = input('Move? (1-9) ')
 	game.state[int(move)] = PLAYER
