@@ -86,7 +86,7 @@ if HOST:
 else:
 	PLAYER = 'O'
 
-print('Y:')
+print('You are "{}":'.format(PLAYER))
 print(BOARD.format(*game.state))
 
 if HOST:
@@ -105,8 +105,10 @@ while True:
 	print(BOARD.format(*game.state))
 
 	move = input('Move? (1-9) ')
-	game.state[int(move)] = PLAYER
+	game.state[int(move) - 1] = PLAYER
 	connection.send(pickle.dumps(game))
+
+	print(BOARD.format(*game.state))
 
 
 
