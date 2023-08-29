@@ -92,8 +92,10 @@ print(BOARD.format(*game.state))
 if HOST:
 
 	move = input('Move? (1-9) ')
-	game.state[int(move)] = PLAYER
+	game.state[int(move) - 1] = PLAYER
+	
 	connection.send(pickle.dumps(game))
+	print(BOARD.format(*game.state))
 
 else:
 
