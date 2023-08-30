@@ -130,7 +130,7 @@ class GAME:
         self.__dict__ = objdict
 
     def bonk(self, target):
-        self.move = target
+        self.move = target.lower()
         connection.send(pickle.dumps(self))
         newstate = pickle.loads(connection.recv(1024)).state.copy()
         if self.state.count('-') < newstate.count('-'):
@@ -144,7 +144,8 @@ class GAME:
 
     def hom(self):
         board = pickle.loads(connection.recv(1024))
-        target = "ABCDEFGHI".index(board.move[0]) * 9 + "123456789".index(board.move[1])
+        target = board.move.lower()
+        target = "abcdefghi".index(target[0]) * 9 + "123456789".index(target[1])
         if self.state[target] == 'O':
             board.state[target] = 'X'
             self.state[target] = 'X'
@@ -217,6 +218,7 @@ while True:
     while True:
 
         show()
+        print('Waiting for other player to bonk...')
         hit = playerBoard.hom()
 
         if not hit:
