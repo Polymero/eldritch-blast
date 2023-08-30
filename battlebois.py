@@ -171,14 +171,19 @@ class GAME:
             'down': 9
         }
         for ship in ships:
-            print('Placing "{}":'.format(ship))
-            print(self)
-            pos, dir = input(' > (XX dir) ').split(' ')
-            pos = "ABCDEFGHI".index(pos[0]) * 9 + "123456789".index(pos[1])
-            for i in range(ships[ship]):
-                k = pos + i * dirs[dir]
-                assert self.state[k] == ' '
-                self.state[k] = 'O'
+            while True:
+                try:
+                    print('Placing "{}":'.format(ship))
+                    print(self)
+                    pos, dir = input(' > (XX dir) ').lower().split(' ')
+                    pos = "abcdefghi".index(pos[0]) * 9 + "123456789".index(pos[1])
+                    for i in range(ships[ship]):
+                        k = pos + i * dirs[dir]
+                        assert self.state[k] == ' '
+                        self.state[k] = 'O'
+                    break
+                except:
+                    continue
 
 
 playerBoard   = GAME()
