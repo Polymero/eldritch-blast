@@ -130,17 +130,21 @@ class GAME:
         self.__dict__ = objdict
 
     def bonk(self, target):
-        self.move = target.lower()
-        connection.send(pickle.dumps(self))
-        newstate = pickle.loads(connection.recv(1024)).state.copy()
-        if self.state.count('-') < newstate.count('-'):
-            hit = 0
-        elif self.state.count('X') < newstate.count('X'):
-            hit = 1
-        else:
-            raise ValueError('wtf')
-        self.state = newstate
-        return hit
+        while True:
+            try:
+                self.move = target.lower()
+                connection.send(pickle.dumps(self))
+                newstate = pickle.loads(connection.recv(1024)).state.copy()
+                if self.state.count('-') < newstate.count('-'):
+                    hit = 0
+                elif self.state.count('X') < newstate.count('X'):
+                    hit = 1
+                else:
+                    raise ValueError('wtf')
+                self.state = newstate
+                return hit
+            except:
+                print('Wut?')
 
     def hom(self):
         board = pickle.loads(connection.recv(1024))
@@ -155,7 +159,7 @@ class GAME:
             self.state[target] = '-'
             hit = 0
         connection.send(pickle.dumps(board))
-        return hit
+        return hit, target
 
     def place(self):
         ships = {
@@ -210,7 +214,10 @@ if HOST:
         target = input('bonk? > (XX) ')
         hit = opponentBoard.bonk(target)
 
-        if not hit:
+        if hit:
+            print('You hit one of their ships. Get ready to bonk again ~ !')
+        else:
+            print('You missed QnQ')
             break
 
 while True:
@@ -219,9 +226,12 @@ while True:
 
         show()
         print('Waiting for other player to bonk...')
-        hit = playerBoard.hom()
+        hit, target = playerBoard.hom()
 
-        if not hit:
+        if hit:
+            print('They hit one of your ships at {}... o7'.format(target.upper()))
+        else:
+            print('The fools missed us at {}~ !'.format(target.upper()))
             break
 
     while True:
@@ -230,7 +240,10 @@ while True:
         target = input('bonk? > (XX) ')
         hit = opponentBoard.bonk(target)
 
-        if not hit:
+        if hit:
+            print('You hit one of their ships. Get ready to bonk again ~ !')
+        else:
+            print('You missed QnQ')
             break
 
 
